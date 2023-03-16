@@ -1,0 +1,6 @@
+SELECT_USER = """
+SELECT `USER_ID`
+     , `USER_PW`
+     , `USER_NM`
+  FROM USERS.USER
+"""
