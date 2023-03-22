@@ -8,13 +8,29 @@ from datetime import datetime, timedelta
 
 import mysql
 import jwt
+import json
 
-def get_user():
-    result = exec_fetch_query(query.SELECT_USER)
+# 유저 정보 가져오기
+def get_user(user_id):
+    result = exec_fetch_query(query.SELECT_USER + ";", {"user_id" : user_id})
 
-    return HTTP_200_OK, jsonable_encoder(result)
+    if not result:
+        return HTTP_404_NOT_FOUND, {"message": "회원 정보를 찾을 수 없습니다.", "result": {}}
 
-def post_user_login(user_id: str, password: str, psfa_corp: str):
+    result = {
+        **jsonable_encoder(result[0]),
+    }
+
+    return HTTP_200_OK, {"message": "OK", "result": result}
+
+# 회원가입
+def post_user(user_info):
+    exec_query(query.INSERT_USER, user_info)
+
+    return HTTP_200_OK
+
+# 로그인 
+def post_user_login(user_id: str, user_pw: str):
     """
     로그인
     """
@@ -23,8 +39,7 @@ def post_user_login(user_id: str, password: str, psfa_corp: str):
         query.SELECT_USER_LOGIN_ID_PW,
         {
             "user_id": user_id,
-            "psfa_corp": psfa_corp,
-            "password": password,
+            "user_pw": user_pw,
         },
     )
 
@@ -49,7 +64,9 @@ def post_user_login(user_id: str, password: str, psfa_corp: str):
             "exp": expiration_timestamp,
             "type": "access",
         },
-        "eoqkrskwk",
+        "rjsanfwn",
     )
+
+    # print(token)
 
     return HTTP_200_OK, {"code": "OK", "message": "OK", "token": f"Bearer {token}"}
