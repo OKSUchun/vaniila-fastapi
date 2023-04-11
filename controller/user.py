@@ -30,16 +30,19 @@ def post_user(user_info):
     return HTTP_200_OK
 
 # 로그인 
-def post_user_login(user_id: str, user_pw: str):
+def post_user_login(login_info):
     """
     로그인
     """
 
+    # print(login_info)
+    # print(login_info["user_id"])
+    
     query_result = exec_fetch_query(
         query.SELECT_USER_LOGIN_ID_PW,
         {
-            "user_id": user_id,
-            "user_pw": user_pw,
+            "user_id": login_info["user_id"],
+            "user_pw": login_info["user_pw"],
         },
     )
 

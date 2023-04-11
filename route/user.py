@@ -14,19 +14,18 @@ def route_get_user(Authorization: str = Header(None)):
 
     return JSONResponse(status_code=status_code, content=result)
 
-@router.post("/register", description="유저 등록")
-def route_post_user(user_info: RegisterArgument):
-    status_code = post_user(jsonable_encoder(user_info))
+@router.post("", description="유저 등록")
+def route_post_user(user_info: dict):
+    status_code = post_user(user_info)
+    
 
     return JSONResponse(status_code=status_code, content={"status_code": status_code})
 
-@router.post("/login", summary="로그인", description="로그인 및 토큰 발급") 
-def route_post_login(
-    user_id: str = Body(...),
-    password: str = Body(...),
-):
-    status_code, result = post_user_login(user_id, password)
 
+@router.post("/login", summary="로그인", description="로그인 및 토큰 발급") 
+def route_post_login(login_info: dict):
+    status_code, result = post_user_login(login_info)
+    
     return JSONResponse(status_code=status_code, content=result)
 
 
