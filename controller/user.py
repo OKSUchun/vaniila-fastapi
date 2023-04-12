@@ -5,6 +5,7 @@ from fastapi.encoders import jsonable_encoder
 from starlette.status import *
 from mysql.connector import errors
 from datetime import datetime, timedelta
+from exception import LOADITDBRequestFailException
 
 import mysql
 import jwt
@@ -25,7 +26,11 @@ def get_user(user_id):
 
 # 회원가입
 def post_user(user_info):
-    exec_query(query.INSERT_USER, user_info)
+    try:
+        exec_query(query.INSERT_USER, user_info)
+    
+    except errors.Error as e:
+        raise LOADITDBRequestFailException(e)
 
     return HTTP_200_OK
 
@@ -35,8 +40,9 @@ def post_user_login(login_info):
     로그인
     """
 
-    # print(login_info)
-    # print(login_info["user_id"])
+    print(login_info)
+    print(login_info["user_id"])
+    print('벡엔드 controller까지 옴')
     
     query_result = exec_fetch_query(
         query.SELECT_USER_LOGIN_ID_PW,

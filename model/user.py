@@ -1,9 +1,6 @@
-from pydantic import BaseModel
-from typing import Union
+from pydantic import BaseModel, Field
 
 class RegisterArgument(BaseModel):
-    user_id: str
-    user_pw: str
-    user_nm: str
-
-    
+    user_nm: str = Field(..., max_length=50)
+    user_pw: str = Field(..., max_length=200)
+    user_nm: str = Field(..., max_length=50)
